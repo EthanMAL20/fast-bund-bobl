@@ -1,0 +1,72 @@
+# FAST Bund / Bobl — version 10 settings (identical to the Excel "Paramètres" sheet)
+name: FAST v10
+initial_aum: 1000000
+start_date: "2015-01-02"
+nominal: 100000
+tick: 0.01
+global_leverage: 2.5
+risk_method: vol_filter          # vol_filter | vol_target
+exclude_roll_from_vol: false     # exclude the contract-change jump from volatility
+vol_target_window: 60
+roll_offset_days: 0              # 0 = roll on the Eurex last trading day
+
+bund:
+  active: true
+  weight: 0.5                    # half weight
+  signal:
+    method: rsi                  # student | moving_averages | macd | rsi
+    rsi_period: 14
+    rsi_rule: trend              # RSI > 50 long, < 50 short
+    t_obs: 12
+    t_proba: 0.005
+    persistence: true
+    multi_windows: false
+    vol_window: 13
+    vol_min: 0.0
+    vol_max: 0.05                # flat when 13-day vol > 5 %
+  hsi:                           # confirmation 1: Hang Seng triple moving average
+    ma: [3, 30, 120]
+    persistence: false
+    lag_days: 0                  # HK closes before the 17:15 Eurex settlement
+  second_confirmation: nfp       # dow_jones | nfp | none
+  dow_jones:
+    ma: [3, 30, 100]
+    lag_days: 1                  # DJ closes at 22:00 Paris: use yesterday's close
+  leverage: {Long: 3, Mid-Long: 2, Short: -3, Mid-Short: -1, NOK: 0}
+  stop_loss_days: 3
+  vol_ref: 0.046
+  lev_max: 4.5
+
+bobl:
+  active: true
+  weight: 1.0
+  signal:
+    method: student
+    t_obs: 12
+    t_proba: 0.005
+    persistence: true
+    multi_windows: false
+    vol_window: 5
+    vol_min: 0.00005
+    vol_max: 0.04
+  confirmation: none             # none | slope | nfp
+  leverage: {Long: 3, Mid-Long: 1, Short: -3, Mid-Short: -1, NOK: 0}
+  stop_loss_days: 4
+  vol_ref: 0.019
+  lev_max: 4.5
+
+nfp:
+  method: day_reaction           # day_reaction | vs_3m_pace | trend_3m_12m
+  hold_sessions: 0               # 0 = until the next release
+
+costs:
+  brokerage_per_contract: 2.0
+  slippage_ticks: 0.5
+  management_fee: 0.005
+  performance_fee: 0.0
+
+cash:
+  share: 1.0
+  margin: 0.0
+  apply_negative_rates: true
+  day_count: 360

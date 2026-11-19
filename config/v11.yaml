@@ -1,0 +1,77 @@
+# FAST Bund — version 11 settings
+# Identical to v10 except that the Bobl leg is switched off.
+# Over 2015-2026 the v10 Bobl leg earned the same as a naive rule
+# "long until 7 Jan 2022, short afterwards" at constant leverage
+# (148 % vs 147 %, sum of daily returns): its result came from the change in
+# the ECB rate regime, not from the signal. See docs/walk_forward.md.
+name: FAST v11 (Bund only)
+initial_aum: 1000000
+start_date: "2015-01-02"
+nominal: 100000
+tick: 0.01
+global_leverage: 2.5
+risk_method: vol_filter
+exclude_roll_from_vol: false
+vol_target_window: 60
+roll_offset_days: 0
+
+bund:
+  active: true
+  weight: 0.5
+  signal:
+    method: rsi
+    rsi_period: 14
+    rsi_rule: trend
+    t_obs: 12
+    t_proba: 0.005
+    persistence: true
+    multi_windows: false
+    vol_window: 13
+    vol_min: 0.0
+    vol_max: 0.05
+  hsi:
+    ma: [3, 30, 120]
+    persistence: false
+    lag_days: 0
+  second_confirmation: nfp
+  dow_jones:
+    ma: [3, 30, 100]
+    lag_days: 1
+  leverage: {Long: 3, Mid-Long: 2, Short: -3, Mid-Short: -1, NOK: 0}
+  stop_loss_days: 3
+  vol_ref: 0.046
+  lev_max: 4.5
+
+bobl:
+  active: false
+  weight: 1.0
+  signal:
+    method: student
+    t_obs: 12
+    t_proba: 0.005
+    persistence: true
+    multi_windows: false
+    vol_window: 5
+    vol_min: 0.00005
+    vol_max: 0.04
+  confirmation: none
+  leverage: {Long: 3, Mid-Long: 1, Short: -3, Mid-Short: -1, NOK: 0}
+  stop_loss_days: 4
+  vol_ref: 0.019
+  lev_max: 4.5
+
+nfp:
+  method: day_reaction
+  hold_sessions: 0
+
+costs:
+  brokerage_per_contract: 2.0
+  slippage_ticks: 0.5
+  management_fee: 0.005
+  performance_fee: 0.0
+
+cash:
+  share: 1.0
+  margin: 0.0
+  apply_negative_rates: true
+  day_count: 360
