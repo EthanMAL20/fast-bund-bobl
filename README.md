@@ -22,6 +22,8 @@ and every option.
 Each year, the parameters (RSI period, volatility-filter cap) are chosen on the 3 previous years
 only, then frozen and traded for the year. Full table in [docs/walk_forward.md](docs/walk_forward.md).
 
+![Walk-forward](docs/walk_forward.png)
+
 | Metric | Out-of-sample (walk-forward) | Fixed v11 settings |
 |---|---:|---:|
 | Annualised return | 5.9 % | 5.2 % |

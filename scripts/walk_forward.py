@@ -2,7 +2,7 @@
 
     python scripts/walk_forward.py --data data/raw --config config/v11.yaml --out docs
 
-Writes docs/walk_forward.md and docs/walk_forward.csv.
+Writes docs/walk_forward.md, docs/walk_forward.csv and docs/walk_forward.png.
 """
 
 from __future__ import annotations
@@ -10,10 +10,15 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 from fastbb import Config, MarketData, run_backtest
+from fastbb.report import AXIS, BLUE, INK2, MUTED, ORANGE, SURFACE, _fig, _style, buy_and_hold
 from fastbb.walkforward import period_stats, set_param, walk_forward
 
 GRID = {"bund.signal.rsi_period": [10, 14, 20], "bund.signal.vol_max": [0.04, 0.05, 0.06]}
@@ -34,6 +39,27 @@ def bobl_vs_naive(md: MarketData, v10: Config) -> pd.DataFrame:
     return out
 
 
+def plot_walk_forward(oos: pd.DataFrame, fixed: pd.DataFrame, bund_bh: pd.Series, path: Path) -> None:
+    """Out-of-sample NAV vs fixed v11 settings and Bund buy & hold, base 100."""
+    fig, ax = _fig()
+    series = [
+        ("Walk-forward (out-of-sample)", 100 * (1 + oos["ret"]).cumprod(), BLUE, 2.0),
+        ("Fixed v11 settings", 100 * (1 + fixed["ret"]).cumprod(), MUTED, 1.4),
+        ("Bund buy & hold", 100 * bund_bh / bund_bh.iloc[0], ORANGE, 1.4),
+    ]
+    for label, s, color, lw in series:
+        ax.plot(s.index, s, color=color, linewidth=lw, label=label)
+        ax.annotate(f"{s.iloc[-1]:.0f}", (s.index[-1], s.iloc[-1]), xytext=(6, 0), textcoords="offset points",
+                    va="center", fontsize=9, color=INK2)
+    ax.axhline(100, color=AXIS, linewidth=1)
+    ax.legend(frameon=False, fontsize=9, loc="upper left", labelcolor=INK2)
+    _style(ax, "Walk-forward validation, base 100",
+           f"Bund strategy · {oos.index[0]:%d/%m/%Y} – {oos.index[-1]:%d/%m/%Y} · parameters recalibrated each year on the 3 previous years · net of costs")
+    fig.tight_layout()
+    fig.savefig(path, facecolor=SURFACE)
+    plt.close(fig)
+
+
 def pct(x: float) -> str:
     return f"{x:+.1%}"
 
@@ -50,7 +76,10 @@ def main() -> None:
     md = MarketData.from_csv(args.data)
     v11 = Config.from_yaml(args.config)
     wf = walk_forward(md, v11, GRID)
-    fixed = run_backtest(md, v11).portfolio.loc[str(wf.choices.test_year.min()):]
+    res11 = run_backtest(md, v11)
+    first = str(wf.choices.test_year.min())
+    fixed = res11.portfolio.loc[first:]
+    plot_walk_forward(wf.returns, fixed, buy_and_hold(res11)["bund"].loc[first:], out / "walk_forward.png")
     oos, ins = wf.stats, period_stats(fixed)
     ex2020 = period_stats(wf.returns[wf.returns.index.year != 2020])
     wf.choices.to_csv(out / "walk_forward.csv", index=False)
