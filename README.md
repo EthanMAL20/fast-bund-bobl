@@ -133,6 +133,8 @@ the 3.4 % / 173 k€ VaR of the last position.
 
 ![Sensitivity](docs/sensitivity_bobl.png)
 
+The points below are the diagnosis of version 10 that led to version 11. For v11, the main limits are that the edge is concentrated in stress periods (out-of-sample Sharpe 0.24 excluding 2020), that it trades a single market, and that the walk-forward grid is narrow. In v11 the VaR is well calibrated: 0.96 % exceptions vs 1 % expected (Kupiec p = 0.90), and the UCITS limit is breached on 41 sessions in 12 years.
+
 - **Parameter fragility.** Over a 45-point grid of Bobl settings (window × significance level),
   the production setting (12 days, 0.5 %) is the best of the 45. The median is +106 % and
   6 settings lose money. Moving from 12 to 10 days gives +16 % instead of +413 %. The headline
