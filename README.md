@@ -31,6 +31,7 @@ only, then frozen and traded for the year. Full table in [docs/walk_forward.md](
 | Sharpe ratio (over the ECB deposit rate) | **0.68** | 0.53 |
 | Maximum drawdown | −15.0 % | −14.4 % |
 | Days with 20-day VaR > 20 % (UCITS limit), 2015–2026 | — | 41 (vs 607 for v10) |
+| VaR 99 % backtest (Kupiec), 2015–2026 | — | 0.96 % exceptions vs 1 % expected, p = 0.90 (v10: 1.6 %, p = 0.008) |
 
 The edge is concentrated in stress periods: excluding 2020, the out-of-sample Sharpe ratio is 0.24.
 The parameter grid is centred on settings already known to work, so the test is somewhat optimistic.
