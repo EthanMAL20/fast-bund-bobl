@@ -15,6 +15,8 @@ and every option.
 
 ![NAV](docs/nav.png)
 
+Developed locally since January 2026 (Excel model, then Python port); published on GitHub in November 2026.
+
 ## Results
 
 ### Version 11 (Bund only) — walk-forward validation, 2018 → 2026, net of costs
