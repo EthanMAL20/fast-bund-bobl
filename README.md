@@ -32,7 +32,7 @@ only, then frozen and traded for the year. Full table in [docs/walk_forward.md](
 | Annualised volatility | 7.1 % | 7.9 % |
 | Sharpe ratio (over the ECB deposit rate) | **0.68** | 0.53 |
 | Maximum drawdown | −15.0 % | −14.4 % |
-| Days with 20-day VaR > 20 % (UCITS limit), 2015–2026 | — | 41 (vs 607 for v10) |
+| Days with 20-day VaR > 20 % (UCITS limit), 2015–2026 | — | 45 (vs 609 for v10) |
 | VaR 99 % backtest (Kupiec), 2015–2026 | — | 0.96 % exceptions vs 1 % expected, p = 0.90 (v10: 1.6 %, p = 0.008) |
 
 The edge is concentrated in stress periods: excluding 2020, the out-of-sample Sharpe ratio is 0.24.
@@ -135,7 +135,7 @@ the 3.4 % / 173 k€ VaR of the last position.
 
 ![Sensitivity](docs/sensitivity_bobl.png)
 
-The points below are the diagnosis of version 10 that led to version 11. For v11, the main limits are that the edge is concentrated in stress periods (out-of-sample Sharpe 0.24 excluding 2020), that it trades a single market, and that the walk-forward grid is narrow. In v11 the VaR is well calibrated: 0.96 % exceptions vs 1 % expected (Kupiec p = 0.90), and the UCITS limit is breached on 41 sessions in 12 years.
+The points below are the diagnosis of version 10 that led to version 11. For v11, the main limits are that the edge is concentrated in stress periods (out-of-sample Sharpe 0.24 excluding 2020), that it trades a single market, and that the walk-forward grid is narrow. In v11 the VaR is well calibrated: 0.96 % exceptions vs 1 % expected (Kupiec p = 0.90), and the UCITS limit is breached on 45 sessions in 12 years.
 
 - **Parameter fragility.** Over a 45-point grid of Bobl settings (window × significance level),
   the production setting (12 days, 0.5 %) is the best of the 45. The median is +106 % and
